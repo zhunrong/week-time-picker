@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div>
     <WeekTimePicker v-model="weektime" />
   </div>
 </template>
@@ -26,9 +26,3 @@ export default class extends Vue {
   };
 }
 </script>
-
-<style lang="scss" scoped>
-#app {
-  padding: 50px;
-}
-</style>
