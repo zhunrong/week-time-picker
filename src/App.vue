@@ -16,7 +16,7 @@ import WeekTimePicker from "@/components/weektime-picker/Picker.vue";
 })
 export default class extends Vue {
   weektime = {
-    mon: ["08:00-12:00"],
+    mon: ["08:00-12:00", "14:00-15:30"],
     tue: ["08:00-12:00"],
     wed: ["08:00-12:00"],
     thu: ["08:00-12:00"],

@@ -1,8 +1,24 @@
 const timePattern = /(([01]\d|2[0-3]):[0-5][0-9]|24:00)/;
 
-export class Time {
+export class Moment {
     hour = 0;
     minute = 0;
+
+    get minutes() {
+        return this.hour * 60 + this.minute;
+    }
+
+    set minutes(minutes: number) {
+        while (minutes < 0 || minutes > 1440) {
+            if (minutes < 0) {
+                minutes += 1440
+            } else {
+                minutes -= 1440
+            }
+        }
+        this.hour = Math.floor(minutes / 60);
+        this.minute = minutes % 60;
+    }
 
     constructor(text?: string) {
         if (text) {
@@ -18,7 +34,7 @@ export class Time {
     }
 
     get() {
-        const {hour, minute} = this;
+        const { hour, minute } = this;
         return `${hour < 10 ? `0${hour}` : hour}:${minute < 10 ? `0${minute}` : minute}`;
     }
 
@@ -26,57 +42,84 @@ export class Time {
         return this.get();
     }
 
-    isGreaterThan(time: Time) {
-        return this.hour > time.hour || (this.hour === time.hour && this.minute > time.minute);
+    /**
+     * 是否在指定时刻之后
+     * @param moment 
+     */
+    isAfter(moment: Moment) {
+        return this.minutes > moment.minutes;
     }
 
-    isLessThan(time: Time) {
-        return this.hour < time.hour || (this.hour === time.hour && this.minute < time.minute);
+    /**
+     * 是否在指定时刻之前
+     * @param moment 
+     */
+    isBefore(moment: Moment) {
+        return this.minutes < moment.minutes;
     }
 
-    isEqualTo(time: Time) {
-        return this.hour === time.hour && this.minute === time.minute;
+    /**
+     * 是否为同一时刻
+     * @param moment 
+     */
+    isSame(moment: Moment) {
+        return this.minutes === moment.minutes;
     }
 
-    isGreaterThanOrEqualTo(time: Time) {
-        return this.isGreaterThan(time) || this.isEqualTo(time);
+    /**
+     * 是否与指定时刻相同或处于之后
+     * @param moment 
+     */
+    isSameOrAfter(moment: Moment) {
+        return this.minutes >= moment.minutes;
     }
 
-    isLessThanOrEqualTo(time: Time) {
-        return this.isLessThan(time) || this.isEqualTo(time);
+    /**
+     * 是否与指定时刻相同或处于之前
+     * @param moment 
+     */
+    isSameOrBefore(moment: Moment) {
+        return this.minutes <= moment.minutes;
     }
 
-    add(time: Time) {
-        const ret = new Time();
-        ret.hour = this.hour + time.hour;
-        ret.minute = this.minute + time.minute;
-        if (ret.minute >= 60) {
-            ret.hour += Math.floor(ret.minute / 60);
-            ret.minute %= 60;
-        }
-        if (ret.hour > 24) {
-            ret.hour %= 24;
-        }
-        return ret;
+    /**
+     * 是否处于两个时刻之前
+     * @param begin 
+     * @param end 
+     */
+    isBetween(begin: Moment, end: Moment) {
+        return this.isSameOrAfter(begin) && this.isSameOrBefore(end);
+    }
+
+    /**
+     * 返回偏移后的时刻
+     * @param minutes 分钟数
+     */
+    offset(minutes: number) {
+        const moment = new Moment();
+        const before = this.minutes;
+        moment.minutes = before + minutes;
+        return moment;
     }
 }
 
+
 export class Period {
-    begin: Time;
-    end: Time;
+    begin: Moment;
+    end: Moment;
 
     constructor(text: string) {
         this.set(text);
     }
 
     isInPeriod(period: Period) {
-        return this.begin.isGreaterThanOrEqualTo(period.begin) && this.end.isLessThanOrEqualTo(period.end);
+        return this.begin.isSameOrAfter(period.begin) && this.end.isSameOrBefore(period.end);
     }
 
     set(text: string) {
         const arr = text.split('-');
-        this.begin = new Time(arr[0]);
-        this.end = new Time(arr[1]);
+        this.begin = new Moment(arr[0]);
+        this.end = new Moment(arr[1]);
     }
 
     get() {
@@ -98,9 +141,8 @@ export interface UnitPeriod {
     selected: boolean;
 }
 
-const DAY_BEGIN = new Time('00:00');
-const DAY_END = new Time('24:00');
-const PERIOD_STEP = new Time('00:30');
+const DAY_BEGIN = new Moment('00:00');
+const DAY_END = new Moment('24:00');
 
 export class Day {
     label: string;
@@ -120,7 +162,7 @@ export class Day {
         let current = DAY_BEGIN;
         while (current < DAY_END) {
             const begin = current;
-            const end = current.add(PERIOD_STEP);
+            const end = current.offset(30);
             const period = new Period(`${begin}-${end}`);
             this.periods.push({
                 period,
@@ -157,16 +199,16 @@ export class Day {
 
     toArray(): string[] {
         const arr: string[] = [];
-        let lastBegin: Time;
-        let lastEnd: Time;
+        let lastBegin: Moment;
+        let lastEnd: Moment;
         this.periods
             .filter(item => item.active)
             .forEach((item, index) => {
-                const {begin, end} = item.period;
+                const { begin, end } = item.period;
                 if (index === 0) {
                     lastBegin = begin;
                     lastEnd = end;
-                } else if (lastEnd.isEqualTo(begin)) {
+                } else if (lastEnd.isSame(begin)) {
                     lastEnd = end;
                 } else {
                     arr.push(`${lastBegin}-${lastEnd}`);
