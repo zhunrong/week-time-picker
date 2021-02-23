@@ -1,45 +1,54 @@
 <template>
-  <div class="period-picker-day" :key="day.label">
+  <div class="day-time-picker" :key="day.field">
     <div class="label">{{ day.label }}</div>
     <ul @mousedown="onMouseDown" @mousemove="onMouseMove" :title="title">
       <li
-        :class="[{ active: period.active, selected: period.selected }]"
-        v-for="(period, index) in day.periods"
+        :class="[{ active: item.active, selected: item.selected }]"
+        v-for="(item, index) in day.data"
         :key="index"
         :data-index="index"
       ></li>
     </ul>
-    <div class="close">
-      <a-icon
-        :class="{ disabled: !title }"
-        type="close-circle"
-        @click="clearPeriod(day)"
-      />
+    <div class="clear">
+      <icon :class="{ disabled: !title }" @click.native="clear(day)" />
     </div>
   </div>
 </template>
 
-<script lang="ts">
+<script lang="tsx">
 import { Component, Vue, Prop } from "vue-property-decorator";
-import { Icon as AIcon } from "ant-design-vue";
-import { Day } from "./utils";
+import { DayTime } from "./utils";
 
 @Component({
-  name: "period-picker-day",
+  name: "day-time-picker",
   components: {
-    AIcon
+    Icon: {
+      render() {
+        return (
+          <svg
+            viewBox="64 64 896 896"
+            width="1em"
+            height="1em"
+            fill="currentColor"
+            aria-hidden="true"
+            focusable="false"
+            class="icon"
+          >
+            <path d="M685.4 354.8c0-4.4-3.6-8-8-8l-66 .3L512 465.6l-99.3-118.4-66.1-.3c-4.4 0-8 3.5-8 8 0 1.9.7 3.7 1.9 5.2l130.1 155L340.5 670a8.32 8.32 0 0 0-1.9 5.2c0 4.4 3.6 8 8 8l66.1-.3L512 564.4l99.3 118.4 66 .3c4.4 0 8-3.5 8-8 0-1.9-.7-3.7-1.9-5.2L553.5 515l130.1-155c1.2-1.4 1.8-3.3 1.8-5.2z"></path>
+            <path d="M512 65C264.6 65 64 265.6 64 513s200.6 448 448 448 448-200.6 448-448S759.4 65 512 65zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"></path>
+          </svg>
+        );
+      }
+    }
   }
 })
 export default class extends Vue {
-  @Prop({
-    default: new Day("label")
-  })
-  day: Day;
+  @Prop({ required: true }) day: DayTime;
   mousedownIndex: number = null;
-  actionType = "activate";
+  actionType = false;
 
   get title() {
-    const text = this.day.toArray().join("\n");
+    const text = this.day.display().join("\n");
     return text ? `${this.day.label}：\n${text}` : "";
   }
 
@@ -55,9 +64,8 @@ export default class extends Vue {
     const target = e.target as HTMLElement;
     if (target.nodeName !== "LI") return;
     this.mousedownIndex = Number(target.dataset.index);
-    const isActive = this.day.periods[this.mousedownIndex].active;
-    this.actionType = isActive ? "unactivate" : "activate";
-    this.updateSelectedList(this.mousedownIndex, this.mousedownIndex);
+    this.actionType = !this.day.data[this.mousedownIndex].active;
+    this.day.setSelected(this.mousedownIndex, this.mousedownIndex);
   }
 
   onMouseMove(e: MouseEvent) {
@@ -65,43 +73,32 @@ export default class extends Vue {
     const target = e.target as HTMLElement;
     if (target.nodeName !== "LI") return;
     const index = Number(target.dataset.index);
-    const start = Math.min(index, this.mousedownIndex);
+    const begin = Math.min(index, this.mousedownIndex);
     const end = Math.max(index, this.mousedownIndex);
-    this.updateSelectedList(start, end);
+    this.day.setSelected(begin, end);
   }
 
   onMouseUp() {
     if (this.mousedownIndex === null) return;
     this.mousedownIndex = null;
     // 更新选中的时段
-    this.day.periods
-      .filter(period => period.selected)
-      .forEach(period => {
-        period.active = this.actionType === "activate";
-        period.selected = false;
-      });
+    this.day.setActive(this.actionType);
     this.$emit("update", this.day);
   }
 
   /**
-   * 更新选中的时段
+   * 清空选中状态
    */
-  updateSelectedList(start: number, end: number) {
-    this.day.periods.forEach((period, index) => {
-      period.selected = start <= index && index <= end;
-    });
-  }
-
-  clearPeriod() {
+  clear() {
     if (!this.title) return;
-    this.day.resetPeriods();
+    this.day.reset();
     this.$emit("update", this.day);
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.period-picker-day {
+.day-time-picker {
   position: relative;
   padding-left: 48px;
   padding-right: 24px;
@@ -119,7 +116,7 @@ export default class extends Vue {
       border-bottom-right-radius: 6px;
     }
   }
-  & + .period-picker-day {
+  & + .day-time-picker {
     ul {
       border-top: none;
     }
@@ -138,6 +135,7 @@ export default class extends Vue {
     display: flex;
     border: 1px solid rgba(0, 0, 0, 0.1);
     overflow: hidden;
+    box-sizing: border-box;
     li {
       list-style: none;
       flex: 1;
@@ -169,7 +167,7 @@ export default class extends Vue {
       }
     }
   }
-  .close {
+  .clear {
     width: 24px;
     height: 100%;
     position: absolute;
@@ -178,9 +176,10 @@ export default class extends Vue {
     display: flex;
     align-items: center;
     justify-content: center;
-    .anticon {
+    .icon {
       cursor: pointer;
       color: #324dff;
+      font-size: 14px;
       &.disabled {
         color: rgba(50, 77, 255, 0.24);
         cursor: not-allowed;

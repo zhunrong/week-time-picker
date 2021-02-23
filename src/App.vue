@@ -1,15 +1,18 @@
 <template>
   <div id="app">
-    <WeekTimePicker v-model="weektime" />
+    <week-time-picker v-model="weektime" />
+    <div style="max-width: 400px; margin-top: 50px;">
+      <week-time-picker v-model="weektime" />
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import WeekTimePicker from "@/components/weektime-picker/Picker.vue";
+import WeekTimePicker from "@/components/week-time-picker";
 
 @Component({
-  name: "weektime-picker-page",
+  name: "week-time-picker-page",
   components: {
     WeekTimePicker
   }
