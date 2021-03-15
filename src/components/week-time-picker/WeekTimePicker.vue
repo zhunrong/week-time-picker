@@ -99,7 +99,7 @@ export default class extends Vue {
     } else {
       this.$emit("input", null);
     }
-    this.$emit("change");
+    this.$emit("change", result);
   }
 
   /**

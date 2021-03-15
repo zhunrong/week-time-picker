@@ -1,7 +1,6 @@
 {
   "name": "week-time-picker",
-  "version": "0.1.0",
-  "private": true,
+  "version": "0.1.2",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
@@ -9,6 +8,9 @@
     "lint:fix": "vue-cli-service lint --fix",
     "build:lib": "vue-cli-service build --target lib --name WeekTimePicker ./src/components/week-time-picker/index.ts"
   },
+  "files": ["dist","types"],
+  "main": "dist/WeekTimePicker.umd.min.js",
+  "types": "types",
   "dependencies": {
     "core-js": "^3.6.5",
     "vue": "^2.6.11",
