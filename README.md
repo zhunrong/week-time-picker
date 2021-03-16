@@ -17,7 +17,6 @@ npm install -S vue-weektime-picker
 ```typescript
 import Vue from 'vue';
 import WeekTimePicker from 'week-time-picker';
-import "week-time-picker/dist/WeekTimePicker.css"; // 引入样式
 
 Vue.use(WeekTimePicker);
 ```
@@ -33,7 +32,6 @@ Vue.use(WeekTimePicker);
 
 <script>
 import WeekTimePicker from 'week-time-picker';
-import "week-time-picker/dist/WeekTimePicker.css"; // 引入样式
 
 export default {
   components: {
@@ -73,4 +71,4 @@ value的具体格式示例
 
 事件名 | 说明 | 回调参数
 ------|------|---------
-change | 数据更新时发 | function(value)
+change | 数据更新时触发 | function(value)
