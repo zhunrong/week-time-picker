@@ -9,7 +9,7 @@
   "license": "UNLICENSED",
   "repository": {
     "type": "git",
-    "url": "git@gitlab.dm-ai.cn:chenzhunrong/week-time-picker.git"
+    "url": "git@gitlab.dm-ai.cn:frontend/components/week-time-picker.git"
   },
   "scripts": {
     "serve": "vue-cli-service serve",
