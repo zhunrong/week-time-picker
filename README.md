@@ -9,14 +9,14 @@
 安装
 
 ```
-npm install -S vue-weektime-picker
+npm install -S @dmai/week-time-picker
 ```
 
 全局注册
 
 ```typescript
 import Vue from 'vue';
-import WeekTimePicker from 'week-time-picker';
+import WeekTimePicker from '@dmai/week-time-picker';
 
 Vue.use(WeekTimePicker);
 ```
@@ -31,7 +31,7 @@ Vue.use(WeekTimePicker);
 </template>
 
 <script>
-import WeekTimePicker from 'week-time-picker';
+import WeekTimePicker from '@dmai/week-time-picker';
 
 export default {
   components: {
