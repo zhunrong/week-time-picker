@@ -1,10 +1,10 @@
 {
-  "name": "@dmai/week-time-picker",
+  "name": "@dmd/week-time-picker",
   "version": "0.1.0",
   "description": "周内时间段选择组件",
   "author": {
     "name": "chenzhunrong",
-    "email": "chenzhunrong@dm-ai.cn"
+    "email": "chenzhunrong@dm-ai.com"
   },
   "license": "UNLICENSED",
   "repository": {
@@ -21,7 +21,8 @@
   },
   "files": [
     "dist",
-    "types"
+    "types",
+    "docs"
   ],
   "main": "dist/WeekTimePicker.umd.min.js",
   "types": "types",
