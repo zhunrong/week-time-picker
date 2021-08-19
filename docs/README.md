@@ -17,6 +17,7 @@ npm install -S @dmd/week-time-picker
  ```js
 import Vue from 'vue';
 import WeekTimePicker from '@dmd/week-time-picker';
+import "@dmd/week-time-picker/dist/WeekTimePicker.css"; // 引入样式
 
 Vue.use(WeekTimePicker);
 ```
@@ -31,7 +32,8 @@ Vue.use(WeekTimePicker);
 </template>
 
 <script>
-import WeekTimePicker from '@dmd/week-time-picker';
+import WeekTimePicker from "@dmd/week-time-picker";
+import "@dmd/week-time-picker/dist/WeekTimePicker.css"; // 引入样式
 
 export default {
   components: {
@@ -53,33 +55,10 @@ export default {
 #### 基本使用
 该组件用于方便、快捷地选取周一至周日每天的时段，可以用于以一周为周期的任务调度/执行系统
 </description>
-<template>
-  <div>
-    <week-time-picker v-model="weektime" />
-  </div>
-</template>
 
-<script>
-import WeekTimePicker from '@dmd/week-time-picker';
-export default {
-  components: {
-    WeekTimePicker
-  },
-  data(){
-    return {
-        weektime: {
-          mon: ["07:00-08:00","16:00-17:00"],
-          tue: ["06:00-09:00","15:00-18:00"],
-          wed: ["07:00-08:00","16:00-17:00"],
-          thu: ["11:30-12:30"],
-          fri: ["11:30-12:30"],
-          sat: ["09:30-10:30","13:30-14:30"],
-          sun: ["10:30-13:30"]
-        }
-    }
-  }
-}
-</script>
+<path>
+./base.vue
+</path>
 ```
 
 ## API

@@ -57,11 +57,9 @@ export default class extends Vue {
     return moments;
   }
 
-  created() {
-    this.initModel();
-  }
-
-  @Watch("value")
+  @Watch("value", {
+    immediate: true
+  })
   initModel() {
     this.weekday.forEach(day => {
       day.init(this.value ? this.value[day.field] : []);

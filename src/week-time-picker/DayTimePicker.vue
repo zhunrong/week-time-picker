@@ -52,7 +52,7 @@ export default class extends Vue {
     return text ? `${this.day.label}：\n${text}` : "";
   }
 
-  created() {
+  mounted() {
     document.addEventListener("mouseup", this.onMouseUp);
   }
 
