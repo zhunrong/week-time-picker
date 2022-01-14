@@ -9,7 +9,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import WeekTimePicker from "@/week-time-picker";
+import WeekTimePicker from "./index";
 
 @Component({
   name: "week-time-picker-page",

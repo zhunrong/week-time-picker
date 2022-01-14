@@ -5,44 +5,38 @@
         <li v-for="item in moments" :key="item">{{ item }}</li>
       </ul>
     </div>
-    <div class="everyday">
-      <DayTimePicker :day="everyDay" @update="onUpdate" />
-    </div>
-    <div>
-      <DayTimePicker
-        v-for="day in weekday"
-        :key="day.field"
-        :day="day"
-        @update="onUpdate"
-      />
+    <div @mousedown="onMouseDown" @mousemove="onMouseMove">
+      <DayGrid v-for="day in weekday" :key="day.field" :day="day" />
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue, Prop, Watch } from "vue-property-decorator";
-import DayTimePicker from "./DayTimePicker.vue";
+import DayGrid from "./DayGrid.vue";
 import { DayTime, Moment } from "./utils";
 
 @Component({
   name: "week-time-picker",
   components: {
-    DayTimePicker
+    DayGrid
   }
 })
 export default class extends Vue {
   @Prop() value: Record<string, string[]>;
 
-  everyDay = new DayTime("每天", "every");
+  startRow = -1;
+  startCol = -1;
+  actionType = false;
 
   weekday = [
-    new DayTime("周一", "mon"),
-    new DayTime("周二", "tue"),
-    new DayTime("周三", "wed"),
-    new DayTime("周四", "thu"),
-    new DayTime("周五", "fri"),
-    new DayTime("周六", "sat"),
-    new DayTime("周日", "sun")
+    new DayTime("周一", "mon", 0),
+    new DayTime("周二", "tue", 1),
+    new DayTime("周三", "wed", 2),
+    new DayTime("周四", "thu", 3),
+    new DayTime("周五", "fri", 4),
+    new DayTime("周六", "sat", 5),
+    new DayTime("周日", "sun", 6)
   ];
 
   get moments() {
@@ -57,6 +51,14 @@ export default class extends Vue {
     return moments;
   }
 
+  mounted() {
+    document.addEventListener("mouseup", this.onMouseUp);
+  }
+
+  beforeDestroy() {
+    document.removeEventListener("mouseup", this.onMouseUp);
+  }
+
   @Watch("value", {
     immediate: true
   })
@@ -64,25 +66,6 @@ export default class extends Vue {
     this.weekday.forEach(day => {
       day.init(this.value ? this.value[day.field] : []);
     });
-    if (this.isEveryDaySame()) {
-      this.everyDay.copy(this.weekday[0]);
-    } else {
-      this.everyDay.init();
-    }
-  }
-
-  onUpdate(day: DayTime) {
-    if (day.label === "每天") {
-      this.weekday.forEach(item => {
-        item.copy(day);
-      });
-    } else if (this.isEveryDaySame()) {
-      this.everyDay.copy(day);
-    } else {
-      this.everyDay.reset();
-    }
-
-    this.emitEvent();
   }
 
   emitEvent() {
@@ -100,25 +83,33 @@ export default class extends Vue {
     this.$emit("change", result);
   }
 
-  /**
-   * 判断是否每天的时段都相同
-   */
-  isEveryDaySame() {
-    let isSame = true;
-    for (let i = 0; i < 48; i++) {
-      let lastActive = null;
-      for (const index in this.weekday) {
-        const active = this.weekday[index].data[i].active;
-        if (lastActive === null) {
-          lastActive = active;
-        } else {
-          isSame = lastActive === active;
-        }
-        if (!isSame) break;
-      }
-      if (!isSame) break;
-    }
-    return isSame;
+  onMouseDown(e: MouseEvent) {
+    const target = e.target as HTMLElement;
+    if (target.nodeName !== "LI") return;
+    this.startRow = +target.dataset.row;
+    this.startCol = +target.dataset.col;
+    this.actionType = target.dataset.active !== "true";
+  }
+
+  onMouseUp() {
+    if (this.startRow === -1) return;
+    this.weekday.forEach(day => day.setActive(this.actionType));
+    this.emitEvent();
+    this.startRow = -1;
+  }
+
+  onMouseMove(e: MouseEvent) {
+    const target = e.target as HTMLElement;
+    if (target.nodeName !== "LI" || this.startRow === -1) return;
+    const endRow = +target.dataset.row;
+    const endCol = +target.dataset.col;
+    const minCol = Math.min(this.startCol, endCol);
+    const maxCol = Math.max(this.startCol, endCol);
+    const minRow = Math.min(this.startRow, endRow);
+    const maxRow = Math.max(this.startRow, endRow);
+    this.weekday.forEach(item => {
+      item.setMouseArea(minCol, maxCol, minRow, maxRow);
+    });
   }
 }
 </script>
@@ -144,9 +135,6 @@ export default class extends Vue {
         list-style: none;
       }
     }
-  }
-  .everyday {
-    margin-bottom: 10px;
   }
 }
 </style>

@@ -1,12 +1,14 @@
 <template>
   <div class="day-time-picker" :key="day.field">
     <div class="label">{{ day.label }}</div>
-    <ul @mousedown="onMouseDown" @mousemove="onMouseMove" :title="title">
+    <ul :title="title">
       <li
         :class="[{ active: item.active, selected: item.selected }]"
-        v-for="(item, index) in day.data"
-        :key="index"
-        :data-index="index"
+        v-for="(item, col) in day.data"
+        :key="col"
+        :data-row="day.index"
+        :data-col="col"
+        :data-active="item.active"
       ></li>
     </ul>
     <div class="clear">
@@ -19,71 +21,37 @@
 import { Component, Vue, Prop } from "vue-property-decorator";
 import { DayTime } from "./utils";
 
+const Icon = {
+  render() {
+    return (
+      <svg
+        viewBox="64 64 896 896"
+        width="1em"
+        height="1em"
+        fill="currentColor"
+        aria-hidden="true"
+        focusable="false"
+        class="icon"
+      >
+        <path d="M685.4 354.8c0-4.4-3.6-8-8-8l-66 .3L512 465.6l-99.3-118.4-66.1-.3c-4.4 0-8 3.5-8 8 0 1.9.7 3.7 1.9 5.2l130.1 155L340.5 670a8.32 8.32 0 0 0-1.9 5.2c0 4.4 3.6 8 8 8l66.1-.3L512 564.4l99.3 118.4 66 .3c4.4 0 8-3.5 8-8 0-1.9-.7-3.7-1.9-5.2L553.5 515l130.1-155c1.2-1.4 1.8-3.3 1.8-5.2z"></path>
+        <path d="M512 65C264.6 65 64 265.6 64 513s200.6 448 448 448 448-200.6 448-448S759.4 65 512 65zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"></path>
+      </svg>
+    );
+  }
+};
+
 @Component({
-  name: "day-time-picker",
+  name: "day-grid",
   components: {
-    Icon: {
-      render() {
-        return (
-          <svg
-            viewBox="64 64 896 896"
-            width="1em"
-            height="1em"
-            fill="currentColor"
-            aria-hidden="true"
-            focusable="false"
-            class="icon"
-          >
-            <path d="M685.4 354.8c0-4.4-3.6-8-8-8l-66 .3L512 465.6l-99.3-118.4-66.1-.3c-4.4 0-8 3.5-8 8 0 1.9.7 3.7 1.9 5.2l130.1 155L340.5 670a8.32 8.32 0 0 0-1.9 5.2c0 4.4 3.6 8 8 8l66.1-.3L512 564.4l99.3 118.4 66 .3c4.4 0 8-3.5 8-8 0-1.9-.7-3.7-1.9-5.2L553.5 515l130.1-155c1.2-1.4 1.8-3.3 1.8-5.2z"></path>
-            <path d="M512 65C264.6 65 64 265.6 64 513s200.6 448 448 448 448-200.6 448-448S759.4 65 512 65zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"></path>
-          </svg>
-        );
-      }
-    }
+    Icon
   }
 })
 export default class extends Vue {
   @Prop({ required: true }) day: DayTime;
-  mousedownIndex: number = null;
-  actionType = false;
 
   get title() {
     const text = this.day.display().join("\n");
     return text ? `${this.day.label}：\n${text}` : "";
-  }
-
-  mounted() {
-    document.addEventListener("mouseup", this.onMouseUp);
-  }
-
-  beforeDestroy() {
-    document.removeEventListener("mouseup", this.onMouseUp);
-  }
-
-  onMouseDown(e: MouseEvent) {
-    const target = e.target as HTMLElement;
-    if (target.nodeName !== "LI") return;
-    this.mousedownIndex = Number(target.dataset.index);
-    this.actionType = !this.day.data[this.mousedownIndex].active;
-    this.day.setSelected(this.mousedownIndex, this.mousedownIndex);
-  }
-
-  onMouseMove(e: MouseEvent) {
-    if (this.mousedownIndex === null) return;
-    const target = e.target as HTMLElement;
-    if (target.nodeName !== "LI") return;
-    const index = Number(target.dataset.index);
-    const begin = Math.min(index, this.mousedownIndex);
-    const end = Math.max(index, this.mousedownIndex);
-    this.day.setSelected(begin, end);
-  }
-
-  onMouseUp() {
-    if (this.mousedownIndex === null) return;
-    this.mousedownIndex = null;
-    // 更新选中的时段
-    this.day.setActive(this.actionType);
-    this.$emit("update", this.day);
   }
 
   /**
@@ -145,6 +113,7 @@ export default class extends Vue {
         content: "";
         display: block;
         height: 100%;
+        transition: background-color 0.2s;
       }
       &:nth-child(6n) {
         border-color: rgba(0, 0, 0, 0.1);

@@ -148,7 +148,11 @@ export interface UnitTime {
 export class DayTime {
   data: UnitTime[] = [];
 
-  constructor(public label: string, public field: string) {}
+  constructor(
+    public label: string,
+    public field: string,
+    public index: number
+  ) {}
 
   /**
    * 初始化时段
@@ -182,6 +186,23 @@ export class DayTime {
     this.data.forEach((item, index) => {
       item.selected = begin <= index && index <= end;
     });
+  }
+
+  /**
+   * 设置鼠标选中范围
+   * @param left
+   * @param right
+   * @param top
+   * @param bottom
+   */
+  setMouseArea(left: number, right: number, top: number, bottom: number) {
+    if (top <= this.index && this.index <= bottom) {
+      this.data.forEach((item, index) => {
+        item.selected = left <= index && index <= right;
+      });
+    } else {
+      this.data.forEach(item => (item.selected = false));
+    }
   }
 
   setActive(bool: boolean) {
