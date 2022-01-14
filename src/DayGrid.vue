@@ -17,10 +17,7 @@
   </div>
 </template>
 
-<script lang="tsx">
-import { Component, Vue, Prop } from "vue-property-decorator";
-import { DayTime } from "./utils";
-
+<script>
 const Icon = {
   render() {
     return (
@@ -40,29 +37,32 @@ const Icon = {
   }
 };
 
-@Component({
+export default {
   name: "day-grid",
   components: {
     Icon
+  },
+  props: {
+    day: {
+      requried: true
+    }
+  },
+  computed: {
+    title() {
+      const text = this.day.display().join("\n");
+      return text ? `${this.day.label}：\n${text}` : "";
+    }
+  },
+  methods: {
+    /**
+     * 清空选中状态
+     */
+    clear() {
+      if (!this.title) return;
+      this.day.reset();
+    }
   }
-})
-export default class extends Vue {
-  @Prop({ required: true }) day: DayTime;
-
-  get title() {
-    const text = this.day.display().join("\n");
-    return text ? `${this.day.label}：\n${text}` : "";
-  }
-
-  /**
-   * 清空选中状态
-   */
-  clear() {
-    if (!this.title) return;
-    this.day.reset();
-    this.$emit("update", this.day);
-  }
-}
+};
 </script>
 
 <style lang="scss" scoped>

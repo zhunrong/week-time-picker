@@ -13,15 +13,13 @@
   },
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
     "lint:fix": "vue-cli-service lint --fix",
-    "build:lib": "vue-cli-service build --target lib --name WeekTimePicker ./src/week-time-picker/index.ts"
+    "build:lib": "vue-cli-service build --target lib --name WeekTimePicker ./src/index.ts"
   },
   "files": [
     "dist",
-    "types",
-    "docs"
+    "types"
   ],
   "main": "dist/WeekTimePicker.umd.min.js",
   "types": "types",

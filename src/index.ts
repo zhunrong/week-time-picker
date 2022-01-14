@@ -1,12 +1,13 @@
 import component from "./WeekTimePicker.vue";
-import { PluginObject, Component } from "vue/types";
+import { PluginObject } from "vue/types";
 
-type WeekTimePicker = Component & PluginObject<void> & { VERSION: string };
+type WeekTimePicker = typeof component &
+  PluginObject<void> & { VERSION: string };
 
 const weekTimePicker = component as WeekTimePicker;
 
 weekTimePicker.install = function(Vue) {
-  Vue.component("week-time-picker", component);
+  Vue.component(component.name, component);
 };
 
 weekTimePicker.VERSION = process.env.VUE_APP_VERSION;
