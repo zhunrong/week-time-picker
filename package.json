@@ -1,23 +1,22 @@
 {
-  "name": "@dmd/week-time-picker",
+  "name": "week-time-picker",
   "version": "0.2.0",
   "description": "周内时间段选择组件",
   "author": {
-    "name": "chenzhunrong",
-    "email": "chenzhunrong@dm-ai.com"
+    "name": "zhunrong",
+    "email": "chenzr@chd.edu.cn"
   },
   "license": "UNLICENSED",
   "repository": {
     "type": "git",
-    "url": "git@gitlab.dm-ai.cn:frontend/components/week-time-picker.git"
+    "url": "git@github.com:zhunrong/week-time-picker.git"
   },
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
     "lint:fix": "vue-cli-service lint --fix",
-    "build:lib": "vue-cli-service build --target lib --name WeekTimePicker ./src/week-time-picker/index.ts",
-    "publish": "npm publish --registry=https://npm.dm-ai.cn/repository/npm_hosted/"
+    "build:lib": "vue-cli-service build --target lib --name WeekTimePicker ./src/week-time-picker/index.ts"
   },
   "files": [
     "dist",

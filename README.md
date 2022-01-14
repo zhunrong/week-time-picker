@@ -1,6 +1,6 @@
 # week-time-picker
 
-![组件展示](https://wiki.dm-ai.cn/download/attachments/215583138/image2021-3-15_16-14-52.png?version=1&modificationDate=1615796092405&api=v2)
+![组件展示](./demo.png)
 
 该组件用于方便、快捷地选取周一至周日每天的时段，可以用于以一周为周期的任务调度/执行系统
 
