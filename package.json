@@ -1,6 +1,6 @@
 {
-  "name": "week-time-picker",
-  "version": "0.2.0",
+  "name": "@chenzr/week-time-picker",
+  "version": "0.1.0",
   "description": "周内时间段选择组件",
   "author": {
     "name": "zhunrong",
@@ -15,13 +15,13 @@
     "serve": "vue-cli-service serve",
     "test:unit": "vue-cli-service test:unit",
     "lint:fix": "vue-cli-service lint --fix",
-    "build:lib": "vue-cli-service build --target lib --name WeekTimePicker ./src/index.ts"
+    "build:lib": "vue-cli-service build --target lib --name week-time-picker ./src/index.ts --dest libs"
   },
   "files": [
-    "dist",
+    "libs",
     "types"
   ],
-  "main": "dist/WeekTimePicker.umd.min.js",
+  "main": "libs/week-time-picker.umd.js",
   "types": "types",
   "dependencies": {
     "core-js": "^3.6.5",
