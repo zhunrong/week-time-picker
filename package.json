@@ -15,7 +15,8 @@
     "serve": "vue-cli-service serve",
     "test:unit": "vue-cli-service test:unit",
     "lint:fix": "vue-cli-service lint --fix",
-    "build:lib": "vue-cli-service build --target lib --name week-time-picker ./src/index.ts --dest libs"
+    "build:lib": "vue-cli-service build --target lib --name week-time-picker ./src/index.ts --dest libs",
+    "build:demo": "vue-cli-service build"
   },
   "files": [
     "libs",

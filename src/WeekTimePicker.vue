@@ -6,22 +6,33 @@
       </ul>
     </div>
     <div @mousedown="onMouseDown" @mousemove="onMouseMove">
-      <DayGrid v-for="day in weekday" :key="day.field" :day="day" />
+      <DayGrid
+        v-for="day in weekday"
+        :key="day.field"
+        :day="day"
+        @clear="onClear(day)"
+      />
     </div>
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import Vue, { PropType } from "vue";
 import DayGrid from "./DayGrid.vue";
-import { DayTime, Moment } from "./utils";
+import { DayTime, Moment, Keys } from "./utils";
 
-export default {
+export type ValueType = {
+  [key in Keys]?: string[];
+};
+
+export default Vue.extend({
   name: "week-time-picker",
   components: {
     DayGrid
   },
   props: {
     value: {
+      type: Object as PropType<ValueType>,
       default: null
     }
   },
@@ -72,7 +83,7 @@ export default {
   },
   methods: {
     emitEvent() {
-      const result = {};
+      const result: ValueType = {};
       let total = 0;
       this.weekday.forEach(day => {
         result[day.field] = day.display();
@@ -85,8 +96,8 @@ export default {
       }
       this.$emit("change", result);
     },
-    onMouseDown(e) {
-      const target = e.target;
+    onMouseDown(e: MouseEvent) {
+      const target = e.target as HTMLElement;
       if (target.nodeName !== "LI") return;
       this.startRow = +target.dataset.row;
       this.startCol = +target.dataset.col;
@@ -98,8 +109,8 @@ export default {
       this.emitEvent();
       this.startRow = -1;
     },
-    onMouseMove(e) {
-      const target = e.target;
+    onMouseMove(e: MouseEvent) {
+      const target = e.target as HTMLElement;
       if (target.nodeName !== "LI" || this.startRow === -1) return;
       const endRow = +target.dataset.row;
       const endCol = +target.dataset.col;
@@ -110,9 +121,13 @@ export default {
       this.weekday.forEach(item => {
         item.setMouseArea(minCol, maxCol, minRow, maxRow);
       });
+    },
+    onClear(day: DayTime) {
+      day.reset();
+      this.emitEvent();
     }
   }
-};
+});
 </script>
 
 <style lang="scss" scoped>

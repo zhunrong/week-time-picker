@@ -145,14 +145,11 @@ export interface UnitTime {
   selected: boolean;
 }
 
+export type Keys = "mon" | "tue" | "wed" | "thu" | "fri" | "sat" | "sun";
 export class DayTime {
   data: UnitTime[] = [];
 
-  constructor(
-    public label: string,
-    public field: string,
-    public index: number
-  ) {}
+  constructor(public label: string, public field: Keys, public index: number) {}
 
   /**
    * 初始化时段

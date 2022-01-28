@@ -12,12 +12,15 @@
       ></li>
     </ul>
     <div class="clear">
-      <icon :class="{ disabled: !title }" @click.native="clear(day)" />
+      <icon :class="{ disabled: !title }" @click.native="clear" />
     </div>
   </div>
 </template>
 
-<script>
+<script lang="tsx">
+import Vue, { PropType } from "vue";
+import { DayTime } from "./utils";
+
 const Icon = {
   render() {
     return (
@@ -37,18 +40,19 @@ const Icon = {
   }
 };
 
-export default {
+export default Vue.extend({
   name: "day-grid",
   components: {
     Icon
   },
   props: {
     day: {
-      requried: true
+      type: Object as PropType<DayTime>,
+      required: true
     }
   },
   computed: {
-    title() {
+    title(): string {
       const text = this.day.display().join("\n");
       return text ? `${this.day.label}：\n${text}` : "";
     }
@@ -59,10 +63,10 @@ export default {
      */
     clear() {
       if (!this.title) return;
-      this.day.reset();
+      this.$emit("clear");
     }
   }
-};
+});
 </script>
 
 <style lang="scss" scoped>
