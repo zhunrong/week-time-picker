@@ -16,7 +16,7 @@
   </div>
 </template>
 
-<script lang="ts">
+<script lang="tsx">
 import Vue, { PropType } from "vue";
 import DayGrid from "./DayGrid.vue";
 import { DayTime, Moment, Keys } from "./utils";
