@@ -7,19 +7,14 @@
     "jsx": "preserve",
     "importHelpers": true,
     "moduleResolution": "node",
-    "experimentalDecorators": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
     "baseUrl": ".",
-    "types": [
-      "webpack-env",
-      "jest"
-    ],
     "paths": {
-      "@/*": [
-        "src/*"
+      "@package": [
+        "package/index.ts"
       ]
     },
     "lib": [
@@ -30,11 +25,12 @@
     ]
   },
   "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "src/**/*.vue",
-    "tests/**/*.ts",
-    "tests/**/*.tsx"
+    "dev/**/*.ts",
+    "dev/**/*.tsx",
+    "dev/**/*.vue",
+    "package/**/*.ts",
+    "package/**/*.tsx",
+    "package/**/*.vue"
   ],
   "exclude": [
     "node_modules"
