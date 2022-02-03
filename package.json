@@ -6,7 +6,7 @@
     "name": "zhunrong",
     "email": "chenzr@chd.edu.cn"
   },
-  "license": "UNLICENSED",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git@github.com:zhunrong/week-time-picker.git"
