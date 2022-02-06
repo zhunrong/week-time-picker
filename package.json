@@ -23,6 +23,6 @@
   "main": "libs/week-time-picker.umd.js",
   "types": "types",
   "devDependencies": {
-    "@chenzr/vue-scaffold": "0.4.1"
+    "@chenzr/vue-scaffold": "0.4.2"
   }
 }

@@ -6,4 +6,4 @@ Vue.use(plugin);
 
 new Vue({
   render: h => h(App)
-}).$mount('#app')
+}).$mount('#app');

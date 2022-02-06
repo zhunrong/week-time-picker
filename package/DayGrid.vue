@@ -1,25 +1,33 @@
 <template>
-  <div class="day-time-picker" :key="day.field">
-    <div class="label">{{ day.label }}</div>
+  <div
+    :key="day.field"
+    class="day-time-picker"
+  >
+    <div class="label">
+      {{ day.label }}
+    </div>
     <ul :title="title">
       <li
-        :class="[{ active: item.active, selected: item.selected }]"
         v-for="(item, col) in day.data"
         :key="col"
+        :class="[{ active: item.active, selected: item.selected }]"
         :data-row="day.index"
         :data-col="col"
         :data-active="item.active"
-      ></li>
+      />
     </ul>
     <div class="clear">
-      <icon :class="{ disabled: !title }" @click.native="clear" />
+      <icon
+        :class="{ disabled: !title }"
+        @click.native="clear"
+      />
     </div>
   </div>
 </template>
 
 <script lang="tsx">
-import Vue, { PropType } from "vue";
-import { DayTime } from "./utils";
+import Vue, { PropType } from 'vue';
+import { DayTime } from './utils';
 
 const Icon = {
   render() {
@@ -41,7 +49,7 @@ const Icon = {
 };
 
 export default Vue.extend({
-  name: "day-grid",
+  name: 'DayGrid',
   components: {
     Icon
   },
@@ -53,8 +61,8 @@ export default Vue.extend({
   },
   computed: {
     title(): string {
-      const text = this.day.display().join("\n");
-      return text ? `${this.day.label}：\n${text}` : "";
+      const text = this.day.display().join('\n');
+      return text ? `${this.day.label}：\n${text}` : '';
     }
   },
   methods: {
@@ -63,7 +71,7 @@ export default Vue.extend({
      */
     clear() {
       if (!this.title) return;
-      this.$emit("clear");
+      this.$emit('clear');
     }
   }
 });
