@@ -2,10 +2,18 @@
   <div class="week-time-picker">
     <div class="moments">
       <ul>
-        <li v-for="item in moments" :key="item">{{ item }}</li>
+        <li
+          v-for="item in moments"
+          :key="item"
+        >
+          {{ item }}
+        </li>
       </ul>
     </div>
-    <div @mousedown="onMouseDown" @mousemove="onMouseMove">
+    <div
+      @mousedown="onMouseDown"
+      @mousemove="onMouseMove"
+    >
       <DayGrid
         v-for="day in weekday"
         :key="day.field"
@@ -17,16 +25,16 @@
 </template>
 
 <script lang="tsx">
-import Vue, { PropType } from "vue";
-import DayGrid from "./DayGrid.vue";
-import { DayTime, Moment, Keys } from "./utils";
+import Vue, { PropType } from 'vue';
+import DayGrid from './DayGrid.vue';
+import { DayTime, Moment, Keys } from './utils';
 
 export type ValueType = {
   [key in Keys]?: string[];
 };
 
 export default Vue.extend({
-  name: "week-time-picker",
+  name: 'WeekTimePicker',
   components: {
     DayGrid
   },
@@ -42,31 +50,15 @@ export default Vue.extend({
       startCol: -1,
       actionType: false,
       weekday: [
-        new DayTime("周一", "mon", 0),
-        new DayTime("周二", "tue", 1),
-        new DayTime("周三", "wed", 2),
-        new DayTime("周四", "thu", 3),
-        new DayTime("周五", "fri", 4),
-        new DayTime("周六", "sat", 5),
-        new DayTime("周日", "sun", 6)
+        new DayTime('周一', 'mon', 0),
+        new DayTime('周二', 'tue', 1),
+        new DayTime('周三', 'wed', 2),
+        new DayTime('周四', 'thu', 3),
+        new DayTime('周五', 'fri', 4),
+        new DayTime('周六', 'sat', 5),
+        new DayTime('周日', 'sun', 6)
       ]
     };
-  },
-  mounted() {
-    document.addEventListener("mouseup", this.onMouseUp);
-  },
-  beforeDestroy() {
-    document.removeEventListener("mouseup", this.onMouseUp);
-  },
-  watch: {
-    value: {
-      immediate: true,
-      handler() {
-        this.weekday.forEach(day => {
-          day.init(this.value ? this.value[day.field] : []);
-        });
-      }
-    }
   },
   computed: {
     moments() {
@@ -81,6 +73,22 @@ export default Vue.extend({
       return moments;
     }
   },
+  watch: {
+    value: {
+      immediate: true,
+      handler() {
+        this.weekday.forEach(day => {
+          day.init(this.value ? this.value[day.field] : []);
+        });
+      }
+    }
+  },
+  mounted() {
+    document.addEventListener('mouseup', this.onMouseUp);
+  },
+  beforeDestroy() {
+    document.removeEventListener('mouseup', this.onMouseUp);
+  },
   methods: {
     emitEvent() {
       const result: ValueType = {};
@@ -90,18 +98,18 @@ export default Vue.extend({
         total += result[day.field].length;
       });
       if (total) {
-        this.$emit("input", result);
+        this.$emit('input', result);
       } else {
-        this.$emit("input", null);
+        this.$emit('input', null);
       }
-      this.$emit("change", result);
+      this.$emit('change', result);
     },
     onMouseDown(e: MouseEvent) {
       const target = e.target as HTMLElement;
-      if (target.nodeName !== "LI") return;
+      if (target.nodeName !== 'LI') return;
       this.startRow = +target.dataset.row;
       this.startCol = +target.dataset.col;
-      this.actionType = target.dataset.active !== "true";
+      this.actionType = target.dataset.active !== 'true';
     },
     onMouseUp() {
       if (this.startRow === -1) return;
@@ -111,7 +119,7 @@ export default Vue.extend({
     },
     onMouseMove(e: MouseEvent) {
       const target = e.target as HTMLElement;
-      if (target.nodeName !== "LI" || this.startRow === -1) return;
+      if (target.nodeName !== 'LI' || this.startRow === -1) return;
       const endRow = +target.dataset.row;
       const endCol = +target.dataset.col;
       const minCol = Math.min(this.startCol, endCol);

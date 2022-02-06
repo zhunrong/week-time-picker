@@ -1,4 +1,4 @@
-import { PluginObject, VueConstructor } from "vue/types";
+import { PluginObject, VueConstructor } from 'vue/types';
 
 type WeekTimePicker = VueConstructor & PluginObject<void>;
 

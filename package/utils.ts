@@ -28,7 +28,7 @@ export class Moment {
 
   set(text: string) {
     if (!timePattern.test(text)) return console.warn(`时间格式不正确：${text}`);
-    const arr = text.split(":");
+    const arr = text.split(':');
     this.hour = parseInt(arr[0]);
     this.minute = parseInt(arr[1]);
   }
@@ -121,7 +121,7 @@ export class TimeRange {
   }
 
   set(text: string) {
-    const arr = text.split("-");
+    const arr = text.split('-');
     this.begin = new Moment(arr[0]);
     this.end = new Moment(arr[1]);
   }
@@ -145,7 +145,7 @@ export interface UnitTime {
   selected: boolean;
 }
 
-export type Keys = "mon" | "tue" | "wed" | "thu" | "fri" | "sat" | "sun";
+export type Keys = 'mon' | 'tue' | 'wed' | 'thu' | 'fri' | 'sat' | 'sun';
 export class DayTime {
   data: UnitTime[] = [];
 
