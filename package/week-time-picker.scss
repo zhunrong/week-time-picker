@@ -1,0 +1,22 @@
+.week-time-picker {
+  user-select: none;
+  font-size: 14px;
+  box-sizing: border-box;
+  color: rgba(0, 0, 0, 0.85);
+  .moments {
+    padding-left: 48px;
+    padding-right: 24px;
+    margin-bottom: 8px;
+    line-height: 22px;
+    font-size: 12px;
+    ul {
+      padding: 0;
+      margin: 0;
+      display: flex;
+      li {
+        flex: 1;
+        list-style: none;
+      }
+    }
+  }
+}
