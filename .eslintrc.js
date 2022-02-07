@@ -25,7 +25,8 @@ module.exports = {
     'keyword-spacing': 'warn',
     'no-multiple-empty-lines': 'warn',
     'no-trailing-spaces': 'warn',
-    'space-infix-ops': ['warn', {'int32Hint': false}]
+    'space-infix-ops': ['warn', {'int32Hint': false}],
+    'vue/no-v-html': 'off'
   },
   overrides: [
     {

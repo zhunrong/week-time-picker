@@ -9,14 +9,15 @@
 安装
 
 ```
-npm install -S week-time-picker
+npm install -S @chenzr/week-time-picker
 ```
 
 全局注册
 
 ```typescript
 import Vue from 'vue';
-import WeekTimePicker from 'week-time-picker';
+import WeekTimePicker from '@chenzr/week-time-picker';
+import '@chenzr/week-time-picker/libs/week-time-picker.css';
 
 Vue.use(WeekTimePicker);
 ```
@@ -31,7 +32,8 @@ Vue.use(WeekTimePicker);
 </template>
 
 <script>
-import WeekTimePicker from 'week-time-picker';
+import WeekTimePicker from '@chenzr/week-time-picker';
+import '@chenzr/week-time-picker/libs/week-time-picker.css';
 
 export default {
   components: {
