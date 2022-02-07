@@ -84,6 +84,8 @@ export default Vue.extend({
       this.startRow = +target.dataset.row;
       this.startCol = +target.dataset.col;
       this.actionType = target.dataset.active !== 'true';
+      // 执行一次选中操作
+      this.onMouseMove(e);
     },
     onMouseUp() {
       if (this.startRow === -1) return;
