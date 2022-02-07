@@ -1,33 +1,7 @@
-<template>
-  <div class="week-time-picker">
-    <div class="moments">
-      <ul>
-        <li
-          v-for="item in moments"
-          :key="item"
-        >
-          {{ item }}
-        </li>
-      </ul>
-    </div>
-    <div
-      @mousedown="onMouseDown"
-      @mousemove="onMouseMove"
-    >
-      <DayGrid
-        v-for="day in weekday"
-        :key="day.field"
-        :day="day"
-        @clear="onClear(day)"
-      />
-    </div>
-  </div>
-</template>
-
-<script lang="tsx">
 import Vue, { PropType } from 'vue';
-import DayGrid from './DayGrid.vue';
+import DayGrid from './day-grid';
 import { DayTime, Moment, Keys } from './utils';
+import './week-time-picker.scss';
 
 export type ValueType = {
   [key in Keys]?: string[];
@@ -36,13 +10,13 @@ export type ValueType = {
 export default Vue.extend({
   name: 'WeekTimePicker',
   components: {
-    DayGrid
+    DayGrid,
   },
   props: {
     value: {
       type: Object as PropType<ValueType>,
-      default: null
-    }
+      default: null,
+    },
   },
   data() {
     return {
@@ -56,8 +30,8 @@ export default Vue.extend({
         new DayTime('周四', 'thu', 3),
         new DayTime('周五', 'fri', 4),
         new DayTime('周六', 'sat', 5),
-        new DayTime('周日', 'sun', 6)
-      ]
+        new DayTime('周日', 'sun', 6),
+      ],
     };
   },
   computed: {
@@ -71,17 +45,17 @@ export default Vue.extend({
         current += 180;
       }
       return moments;
-    }
+    },
   },
   watch: {
     value: {
       immediate: true,
       handler() {
-        this.weekday.forEach(day => {
+        this.weekday.forEach((day) => {
           day.init(this.value ? this.value[day.field] : []);
         });
-      }
-    }
+      },
+    },
   },
   mounted() {
     document.addEventListener('mouseup', this.onMouseUp);
@@ -93,7 +67,7 @@ export default Vue.extend({
     emitEvent() {
       const result: ValueType = {};
       let total = 0;
-      this.weekday.forEach(day => {
+      this.weekday.forEach((day) => {
         result[day.field] = day.display();
         total += result[day.field].length;
       });
@@ -113,7 +87,7 @@ export default Vue.extend({
     },
     onMouseUp() {
       if (this.startRow === -1) return;
-      this.weekday.forEach(day => day.setActive(this.actionType));
+      this.weekday.forEach((day) => day.setActive(this.actionType));
       this.emitEvent();
       this.startRow = -1;
     },
@@ -126,39 +100,35 @@ export default Vue.extend({
       const maxCol = Math.max(this.startCol, endCol);
       const minRow = Math.min(this.startRow, endRow);
       const maxRow = Math.max(this.startRow, endRow);
-      this.weekday.forEach(item => {
+      this.weekday.forEach((item) => {
         item.setMouseArea(minCol, maxCol, minRow, maxRow);
       });
     },
     onClear(day: DayTime) {
       day.reset();
       this.emitEvent();
-    }
-  }
+    },
+  },
+  render() {
+    return (
+      <div class="week-time-picker">
+        <div class="moments">
+          <ul>
+            {this.moments.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+        </div>
+        <div vOn:mousedown={this.onMouseDown} vOn:mousemove={this.onMouseMove}>
+          {this.weekday.map((day) => (
+            <day-grid
+              key={day.field}
+              day={day}
+              vOn:clear={() => this.onClear(day)}
+            ></day-grid>
+          ))}
+        </div>
+      </div>
+    );
+  },
 });
-</script>
-
-<style lang="scss" scoped>
-.week-time-picker {
-  user-select: none;
-  font-size: 14px;
-  box-sizing: border-box;
-  color: rgba(0, 0, 0, 0.85);
-  .moments {
-    padding-left: 48px;
-    padding-right: 24px;
-    margin-bottom: 8px;
-    line-height: 22px;
-    font-size: 12px;
-    ul {
-      padding: 0;
-      margin: 0;
-      display: flex;
-      li {
-        flex: 1;
-        list-style: none;
-      }
-    }
-  }
-}
-</style>

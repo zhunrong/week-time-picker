@@ -1,4 +1,4 @@
-import component from './WeekTimePicker.vue';
+import component from './week-time-picker';
 import { PluginObject } from 'vue';
 
 type ComponentType = typeof component & PluginObject<void>;
